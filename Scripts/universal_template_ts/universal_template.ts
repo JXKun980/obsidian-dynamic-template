@@ -10,6 +10,9 @@ async function my_function(tp: any) {
     const old_content = await tp.file.content; // get existing content before insertion of template
 
 	// Template class definitions
+	/*
+	* No inference based on note title.
+	*/
 	class BasicNoteTemplate {
 		name = "Basic Note";
 		tags: string;
@@ -44,6 +47,11 @@ async function my_function(tp: any) {
 		}
 	}
 
+	/*
+	* Note title must be in the format: "<Title> <Index>"
+	* Title: any string (E.g. Note)
+	* Index: any number (E.g. 5)
+	*/
 	class SequentialNoteTemplate extends BasicNoteTemplate {
 		name = "Sequential Note";
 		index: number;
@@ -69,6 +77,12 @@ async function my_function(tp: any) {
 		}
 	}
 
+	/*
+	* Note title must be in the format: "<Subject> <Type> <Index>"
+	* Subject: any string (E.g. BTS2231)
+	* Type: any string (E.g. Workshop) 
+	* Index: any number (E.g. 5)
+	*/
 	class UniversityNoteTemplate extends BasicNoteTemplate {
 		name = "University Note";
 		subject: string;
