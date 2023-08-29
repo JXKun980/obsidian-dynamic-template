@@ -10,9 +10,6 @@ async function my_function(tp: any) {
     const old_content = await tp.file.content; // get existing content before insertion of template
 
 	// Template class definitions
-	/*
-	* No inference based on note title.
-	*/
 	class BasicNoteTemplate {
 		name = "Basic Note";
 		tags: string;
@@ -47,24 +44,19 @@ async function my_function(tp: any) {
 		}
 	}
 
-	/*
-	* Note title must be in the format: "<Title> <Index>"
-	* Title: any string (E.g. Note)
-	* Index: any number (E.g. 5)
-	*/
 	class SequentialNoteTemplate extends BasicNoteTemplate {
 		name = "Sequential Note";
 		index: number;
 		title: string;
 		initialize() {
-			super.initialize();
 			this.init_index_title();
+			super.initialize();
 		}
 		init_index_title() {
 			const title_token = tp.file.title.split(' ');
 			if (isNaN(Number(title_token[title_token.length-1]))) throw new Error("Title do not match format of Sequential Note");
 			this.index = Number(title_token.slice(-1)) // Numbers
-			this.title = title_token.slice(-1).join(' ');
+			this.title = title_token.slice(0, -1).join(' ');
 		}
 		init_links() {
 			super.init_links();
@@ -77,12 +69,6 @@ async function my_function(tp: any) {
 		}
 	}
 
-	/*
-	* Note title must be in the format: "<Subject> <Type> <Index>"
-	* Subject: any string (E.g. BTS2231)
-	* Type: any string (E.g. Workshop) 
-	* Index: any number (E.g. 5)
-	*/
 	class UniversityNoteTemplate extends BasicNoteTemplate {
 		name = "University Note";
 		subject: string;
@@ -90,8 +76,8 @@ async function my_function(tp: any) {
 		index: number;
 
 		initialize() {
-			super.initialize();
 			this.init_subject_type_index();
+			super.initialize();
 		}
 
 		init_subject_type_index() {
@@ -114,6 +100,8 @@ async function my_function(tp: any) {
 		}
 	
 		init_links() {
+			super.init_links();
+
 			this.links.up = `Up:: [[MOC ${this.subject}]] ${g_template_config.extra_links.up}`
 
 			const base_link_prev = this.index - 1 > 0 ? `[[${this.subject} ${this.type} ${(this.index - 1)}]]` : '';
@@ -133,8 +121,7 @@ async function my_function(tp: any) {
 ![[${this.subject} ${this.type} ${this.index}.pdf]]
 
 ## Notes
----
-`;
+---`;
 			}
 			this.content = base_content + old_content + g_template_config.extra_content;
 		}

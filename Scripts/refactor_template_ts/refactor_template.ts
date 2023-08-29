@@ -18,11 +18,14 @@ async function my_function(tp: any) {
     refactor_content = refactor_content.replace(/^# .*\n/gm, ''); // Remove level 1 heading
     refactor_content = refactor_content.replace(/^#(?=#+)/gm, ''); // Reduce all other heading level by 1
 
+    // Modify tags to inherit
+    const new_tags = tp.file.tags.filter(tag => tag.match(/MOC/) == null);
+
     // Configure universal template
     g_template_config.change(
         {
             extra_content: refactor_content,
-            extra_tags: tp.file.tags,
+            extra_tags: new_tags,
             extra_links: {
                 up: [tp.config.active_file.basename],
                 down: [],
